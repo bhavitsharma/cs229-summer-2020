@@ -1,23 +1,34 @@
 {
-  description = "A Python environment with pandas and numpy";
+  description = "CS229 solutions";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     flake-utils.url = "github:numtide/flake-utils";
+
+    mach-nix.url = "github:davhau/mach-nix";
   };
 
-  outputs = { self, nixpkgs, flake-utils }:
+  outputs = { self, nixpkgs, mach-nix, flake-utils, ... }:
+    let
+      pythonVersion = "python39";
+    in
     flake-utils.lib.eachDefaultSystem (system:
       let
-        pkgs = import nixpkgs { inherit system; };
-        python = pkgs.python3.withPackages (ps: with ps; [
-          pandas
-          numpy
-        ]);
+        pkgs = nixpkgs.legacyPackages.${system};
+        mach = mach-nix.lib.${system};
+
+        pythonEnv = mach.mkPython {
+          python = pythonVersion;
+          requirements = builtins.readFile ./requirements.txt;
+        };
       in
       {
-        devShell = pkgs.mkShell {
-          buildInputs = [ python ];
+        devShells.default = pkgs.mkShellNoCC {
+          packages = [ pythonEnv ];
+
+          shellHook = ''
+            export PYTHONPATH="${pythonEnv}/bin/python"
+          '';
         };
       }
     );
