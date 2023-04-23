@@ -1,0 +1,10 @@
+---
+title: "cs229 problem set 1"
+author: "Bhavit Sharma"
+date: "today"
+format:
+  pdf:
+    toc: true
+    number-sections: true
+    colorlinks: true
+---

@@ -3,7 +3,7 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    flake-utils.url = "github:numtide/flake-utils";    
+    flake-utils.url = "github:numtide/flake-utils";
     flake-compat = {
       url = "github:edolstra/flake-compat";
       flake = false;
@@ -28,10 +28,11 @@
       in
       {
         devShells.default = pkgs.mkShellNoCC {
-          packages = [ pythonEnv ];
+          packages = [ pythonEnv pkgs.yapf ];
 
           shellHook = ''
             export PYTHONPATH="${pythonEnv}/bin/python"
+            export YAPF_PATH="${pkgs.yapf}/bin/yapf"
           '';
         };
       }

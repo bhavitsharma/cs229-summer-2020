@@ -67,3 +67,15 @@ where $d$ is the dimension of $x$. Try to write this in matrix form and you can 
 Since $\sigma(\theta^T x_k) \in [0, 1]$, we have $H \geq 0$ always.
 
 ## (b)
+
+<!--
+Link images to the original source
+and link to the code.
+-->
+::: {layout-ncol=2}
+![first](./ps1/src/linearclass/logreg_pred_1.png)
+
+![second](./ps1/src/linearclass/logreg_pred_2.png)
+:::
+
+## (c)

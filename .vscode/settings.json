@@ -1,3 +1,15 @@
 {
-    "nixEnvSelector.nixFile": "${workspaceRoot}/shell.nix",
+  "python.formatting.provider": "yapf",
+  "python.formatting.yapfPath": "${env:YAPF_PATH}",
+  "python.formatting.yapfArgs": [
+    "--style",
+    "{based_on_style: google, indent_width: 2}"
+  ],
+  "nixEnvSelector.suggestion": false,
+  "editor.formatOnSave": true,
+  "editor.formatOnPaste": true,
+  "editor.tabSize": 2,
+  "editor.insertSpaces": true,
+  "editor.indentSize": 2,
+  "nixEnvSelector.nixFile": "${workspaceRoot}/shell.nix"
 }
