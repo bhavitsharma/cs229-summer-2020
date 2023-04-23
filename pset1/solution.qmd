@@ -79,3 +79,108 @@ and link to the code.
 :::
 
 ## (c)
+
+We need to show that GDA results in a classifier that has
+linear decision boundary i.e.
+$$P(y = 1 | x; \phi, \mu_0, \mu_1, \Sigma) = \frac{1}{1 + \exp(-(\theta^Tx + \theta_0))}$$
+Using bayes rule, we have
+$$ P(y = 1 | x; \phi, \mu_0, \mu_1, \Sigma) = \frac{P(x | y = 1; \mu_1, \Sigma) P(y = 1; \phi)}{P(x; \mu_0, \mu_1, \Sigma)} $$
+Plugging formulas, we end up with an expression that looks like
+$$ P(y = 1 | x; \phi, \mu_0, \mu_1, \Sigma) = \frac{1}{1 + \exp(-(f_1 - f_0))} $$
+
+and $f_0 = \frac{-1}{2} (x - \mu_0)^T \Sigma^{-1} (x - \mu_0) + \log (1 - \phi)$ and $f_1 = \frac{-1}{2} (x - \mu_1)^T \Sigma^{-1} (x - \mu_1) + \log (\phi)$
+and $f_1 - f_0 = \frac{-1}{2} (x - \mu_1)^T \Sigma^{-1} (x - \mu_1) + \log (\phi) - \frac{-1}{2} (x - \mu_0)^T \Sigma^{-1} (x - \mu_0) + \log (1 - \phi)$
+
+If we expand the above expression by opening the transpose, we get
+$$ f_1 - f_0 = \frac{-1}{2} (k) + \log (\phi) - \log (1 - \phi) $$
+$$k = (x^T - \mu_1^T) \Sigma^{-1} (x - \mu_1) - (x^T - \mu_0^T) \Sigma^{-1} (x - \mu_0)$$
+$$ = \theta^T x + \theta_0 $$
+
+We also use the fact $(X . Y)^T = Y^T . X^T$ and $(X + Y)^T = X^T + Y^T$.
+
+where $\theta_0 = (\mu_1^T \Sigma^{-1} \mu_1 - \mu_0^T \Sigma^{-1} \mu_0) + \log (\phi) - \log (1 - \phi)$
+and $(\mu_0 - \mu_1)^T \Sigma^{-1} = \theta$
+
+## (d)
+
+We want to derive the parameters for $\phi, \mu_0, \mu_1, \Sigma$. 
+We derive this using the log likelihood function. We know that the log likelihood function is
+$$ \ell(\phi, \mu_0, \mu_1, \Sigma) = \prod_{i=1}^n \log P(x^{(i)}, y^{(i)}; \phi, \mu_0, \mu_1, \Sigma) $$
+
+$$ = \sum_{i=1}^n \log P(x^{(i)} | y^{(i)}; \mu_0, \mu_1, \Sigma) + \log P(y^{(i)}; \phi)$$
+$$ \log P(x^{(i)} | y^{(i)}; \mu_0, \mu_1, \Sigma) = \log \left( \frac{1}{(2 \pi)^{d/2} |\Sigma|^{1/2}} \exp \left( -\frac{1}{2} (x^{(i)} - \mu_{y^{(i)}})^T \Sigma^{-1} (x^{(i)} - \mu_{y^{(i)}}) \right) \right) $$
+$$ = -\frac{1}{2} \log (2 \pi) - \frac{1}{2} \log |\Sigma| - \frac{1}{2} (x^{(i)} - \mu_{y^{(i)}})^T \Sigma^{-1} (x^{(i)} - \mu_{y^{(i)}}) $$
+and
+$$ \log P(y^{(i)}; \phi) = y^{(i)} \log \phi + (1 - y^{(i)}) \log (1 - \phi) $$
+Now differentiating the above expression with respect to $\phi, \mu_0, \mu_1, \Sigma$ and setting it to zero, we get the following expressions.
+
+$$ \frac{\partial \ell}{\partial \phi} = \frac{1}{\phi} \sum_{i=1}^n y^{(i)} - \frac{1}{1 - \phi} \sum_{i=1}^n (1 - y^{(i)}) = 0 $$
+
+### Solve for $\phi$
+
+$$ \frac{1}{\phi} \sum_{i=1}^n y^{(i)} = \frac{1}{1 - \phi} \sum_{i=1}^n (1 - y^{(i)}) $$
+$$ \sum_{i=1}^n y^{(i)} = \frac{\phi}{1 - \phi} \sum_{i=1}^n (1 - y^{(i)}) $$
+$$ \phi = \frac{\sum_{i=1}^n y^{(i)}}{n} $$
+
+### For $\mu_0, \mu_1$
+The proof follows similar for $\mu_0$ and $\mu_1$.
+We'll just prove for $\mu_0$.
+$$ 
+\frac{\partial \ell}{\partial \mu_0}
+  = \sum_{i=1}^n \frac{\partial}{\partial \mu_0} y_i \left( -\frac{1}{2} \log (2 \pi) - \frac{1}{2} \log |\Sigma| - \frac{1}{2} (x^{(i)} - \mu_0)^T \Sigma^{-1} (x^{(i)} - \mu_0) \right) 
+$$
+
+We need to calculate this quantity:
+<!--
+d/du(x - u)^T A (x - u) = 2 A (x - u)
+-->
+i.e. for $x = x^TUx$ where $x$ is a vector, $U$ is a matrix and $u$ is a vector, we need to calculate
+$$ \frac{\partial}{\partial x^TUx} x = 2 U x $$
+if $U$ is symmetric.
+
+So this means
+$$
+\sum_{i = 1}^n 2 \Sigma^{-1} (x^{(i)} - \mu_0) y^{(i)} = 0
+$$
+Since $\Sigma$ is symmetric and positive definite, we can write
+$$
+\Sigma^{-1}\sum_{i = 1}^n (x^{(i)} - \mu_0) y^{(i)} = 0
+$$
+
+This gives the results we want.
+
+### For $\Sigma$
+
+$$
+\frac{\partial \ell}{\partial \Sigma}
+  = \sum_{i=1}^n \frac{\partial}{\partial \Sigma} y_i \left( -\frac{1}{2} \log (2 \pi) - \frac{1}{2} \log |\Sigma| - \frac{1}{2} (x^{(i)} - \mu_0)^T \Sigma^{-1} (x^{(i)} - \mu_0) \right)
+$$
+
+I have added the solution in my [my-notes](../my-notes.qmd) file.
+
+## (e)
+
+::: {layout-ncol=2}
+![first](./ps1/src/linearclass/gda_pred_1.png)
+
+![second](./ps1/src/linearclass/gda_pred_2.png)
+:::
+
+## (f)
+
+The decision boundary of logistic regression is much better. 
+As we can see there are some misclassifications of both green and blue points in the GDA case.
+
+## (g)
+
+similar to (f)
+
+## (h)
+
+As suggested by chatGPT, we can use the following transformations o get a better decision boundary.
+
+1. Standardization: Standardize the input features by subtracting the mean and dividing by the standard deviation. This can make the Gaussian distributions more comparable and easier for GDA to model.
+1. Log transformation: If the input data is highly skewed, applying a log transformation can help reduce the skewness and make the distribution more symmetric.
+1. Polynomial transformations: You can introduce higher-order polynomial features or interaction terms to capture non-linear relationships between input features.
+1. Principal Component Analysis (PCA): Perform PCA to transform the input data into a new set of orthogonal features that capture most of the variance in the data. This can help reduce the dimensionality and make it easier for GDA to model the underlying distributions.
+1. Whitening: Transform the input data to have zero mean and identity covariance matrix. This can be achieved by first standardizing the data and then applying PCA followed by scaling the principal components to have unit variance.
