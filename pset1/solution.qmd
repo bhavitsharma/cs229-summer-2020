@@ -184,3 +184,105 @@ As suggested by chatGPT, we can use the following transformations o get a better
 1. Polynomial transformations: You can introduce higher-order polynomial features or interaction terms to capture non-linear relationships between input features.
 1. Principal Component Analysis (PCA): Perform PCA to transform the input data into a new set of orthogonal features that capture most of the variance in the data. This can help reduce the dimensionality and make it easier for GDA to model the underlying distributions.
 1. Whitening: Transform the input data to have zero mean and identity covariance matrix. This can be achieved by first standardizing the data and then applying PCA followed by scaling the principal components to have unit variance.
+
+# Problem 2: Incomplete, Positive-Only Labels
+
+## (a)
+
+::: {layout-ncol=2}
+![Positive-Only true labels](./ps1/src/posonly/posonly-true.jpg)
+:::
+
+## (b)
+
+::: {layout-ncol=2}
+![Positive-Only predicted labels(Trained on just y)](./ps1/src/posonly/posonly-naive.jpg)
+:::
+
+## (c)
+
+We want to show $P(t^{(i)} = 1 | y^{i} = 1, x^{(i)}; \theta) = 1$ for all $i$.
+Using bayes rule, we have
+$$
+P(t^{(i)} = 1 | y^{i} = 1, x^{(i)}; \theta) = \frac{P(y^{i} = 1 | t^{(i)} = 1, x^{(i)}; \theta) P(t^{(i)} = 1 | x^{(i)}; \theta)}{P(y^{i} = 1 | t^{i}, x^{(i)}; \theta)}
+$$
+
+$$
+P(y^{i} = 1 | t^{i}, x^{(i)}; \theta) = P(y^{i} = 1 | t^{(i)} = 1, x^{(i)}; \theta) P(t^{(i)} = 1 | x^{(i)}; \theta) + P(y^{i} = 1 | t^{(i)} = 0, x^{(i)}; \theta) P(t^{(i)} = 0 | x^{(i)}; \theta)
+$$
+
+We know that $P(y^{i} = 1 | t^{(i)} = 0, x^{(i)}; \theta) = 0$.
+
+## (d)
+
+we need to show $P(t^i = 1 | x^i; \theta) = \frac{1}{\alpha} . P(y^i =1 | x^i)$ for all $i$.
+
+We know that
+$P(y^i = 1 | t^i = 1, x^i; \theta) = \alpha$
+Using conditional probability, we have
+$$
+P(y^i = 1 | t^i = 1, x^i) = \frac{P(y^i = 1 \cap t^i = 1 | x^i)}{P(t^i = 1 | x^i)}
+$$
+$P(y^i = 1 \cap t^i = 1) = P(y^i = 1| x^i)$ since $y^i = 1$ implies $t^i = 1$.
+
+## (e)
+
+$$
+h(x^i) = P(t^i = 1 | x^i) * P(y^i = 1 | t^i = 1, x^i) + P(t^i = 0 | x^i) * P(y^i = 1 | t^i = 0, x^i) \\
+$$
+
+## (f)
+
+::: {layout-ncol=2}
+![adjusted](./ps1/src/posonly/posonly_adjusted.jpg)
+:::
+
+# Problem 3: Poisson Regression
+
+## (a)
+
+Boring problem, skipped.
+
+## (b)
+
+Boring problem, skipped.
+
+## (c)
+
+For GLM:
+$$
+P(y; \eta) = b(y) exp(\eta^T T(y) - a(\eta))
+$$
+Log likelihood $l(\theta)$ is given by
+
+$$
+l(\theta) = \sum_{i=1}^n \log P(y^{(i)}; \eta^{(i)}) \\
+= \sum_{i=1}^n \log b(y^{(i)}) + \eta^{(i)T} T(y^{(i)}) - a(\eta^{(i)})
+$$
+
+Plugging values we get
+$$
+= \sum_{i=1}^n \log \frac{1}{y^{(i)}!} + y^{(i)} \log \lambda^{(i)} - \lambda^{(i)} \\
+$$
+Since $\lambda^{(i)} = \exp(\theta^T x^{(i)})$,
+$$
+= \sum_{i=1}^n \log \frac{1}{y^{(i)}!} + y^{(i)} \theta^T x^{(i)} - \exp(\theta^T x^{(i)})
+$$
+Taking derivative w.r.t $\theta_j$,
+
+$$
+\frac{\partial l(\theta)}{\partial \theta_j} = \sum_{i=1}^n y^{(i)} x_j^{(i)} - \exp(\theta^T x^{(i)}) x_j^{(i)}
+$$
+$$
+= \sum_{i=1}^n (y^{(i)} - \exp(\theta^T x^{(i)})) x_j^{(i)}
+$$
+
+## (d)
+
+![poisson](./ps1/src/poisson/poisson.png)
+
+# Problem 4: Convexity of Generalized Linear Models
+
+## (a)
+
+
