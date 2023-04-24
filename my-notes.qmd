@@ -1,5 +1,5 @@
 ---
-title: "cs229 problem set 1"
+title: "cs229 notes"
 author: "Bhavit Sharma"
 date: "today"
 format:
@@ -109,3 +109,5 @@ Hint: You can think of the fact only the $jth$ row of $F$ is multiplied by the $
 column, and only $ith$ column of $jth$ row of $F$ is multiplied by the $ith$ row of $jth$ column of $F$ leading to element at $F_{jj}$ contributing and the rest being zero.
 
 Hence: $H = -X^{-1}zz^TX^{-1}$
+
+# Prove that if $z^THz \geq 0$ then $H$ is positive semi-definite and cost function $J$ is convex. $H$ is Hessian matrix of $J$.

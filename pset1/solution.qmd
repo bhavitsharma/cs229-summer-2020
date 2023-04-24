@@ -279,10 +279,138 @@ $$
 
 ## (d)
 
+::: {layout-ncol=2}
+
 ![poisson](./ps1/src/poisson/poisson.png)
+
+:::
+
+----****----
 
 # Problem 4: Convexity of Generalized Linear Models
 
+$$
+p(y; \eta) = b(y) exp(\eta^T T(y) - a(\eta))
+$$
+
+and
+
+$$
+1 = \int_{-\infty}^{\infty} p(y; \eta) dy
+$$
+
 ## (a)
 
+We need to show that $\mathbb{E}[Y; \eta] = \frac{\partial}{\partial \eta} a(\eta)$. By using the integral hint, we have
+$$
+1 = \int_{-\infty}^{\infty} p(y; \eta) dy \\
+$$
+Differentiating w.r.t $\eta$,
+$$
+\frac{\partial}{\partial \eta} 1 = \int_{-\infty}^{\infty} \frac{\partial}{\partial \eta} p(y; \eta) dy \\
+$$
+$$
+0 = \int_{-\infty}^{\infty} \frac{\partial}{\partial \eta} b(y) exp(\eta^T T(y) - a(\eta)) dy \\
+$$
+$$
+0 = \int_{-\infty}^{\infty} b(y) exp(\eta^T T(y) - a(\eta)) \frac{\partial}{\partial \eta} (\eta^T T(y) - a(\eta)) dy \\
+$$
+$$
+0 = \int_{-\infty}^{\infty} b(y) exp(\eta^T T(y) - a(\eta)) (T(y) - \alpha^{\prime}(n)) dy \\
+$$
+Simplifying, we get
+$$
+0 = \int_{-\infty}^{\infty} b(y) exp(\eta^T T(y) - a(\eta)) T(y) dy - \int_{-\infty}^{\infty} b(y) exp(\eta^T T(y) - a(\eta)) \alpha^{\prime}(n) dy \\
+$$
+$$
+E[Y; \eta] = \frac{\partial}{\partial \eta} a(\eta)
+$$
 
+## (b)
+
+Now we need to show that the variance $Var(Y; \eta) = \frac{\partial^2}{\partial \eta^2} a(\eta)$. By using the integral hint, we have
+
+$$
+1 = \int_{-\infty}^{\infty} p(y; \eta) dy \\
+$$
+
+Double differentiating w.r.t $\eta$,
+$$
+\frac{\partial^2}{\partial \eta^2} 1 = \int_{-\infty}^{\infty} \frac{\partial^2}{\partial \eta^2} p(y; \eta) dy \\
+$$
+
+So to calculate the $\frac{\partial^2}{\partial \eta^2} exp(\eta^T T(y) - a(\eta))$, we need to use the product rule.
+It'll be
+$$
+\frac{\partial^2}{\partial \eta^2} f(\eta) = \exp(\eta y - a(\eta)) \cdot (-a''(\eta) + (y - a'(\eta))^2)
+$$
+
+Now we have
+$$
+0 = \int_{-\infty}^{\infty} b(y) exp(\eta^T T(y) - a(\eta)) \cdot (-a''(\eta) + (y - a'(\eta))^2) dy
+$$
+
+Simplifying, we get
+$$
+a(\eta)'' = \int_{-\infty}^{\infty} b(y) exp(\eta^T T(y) - a(\eta)) \cdot (y - a'(\eta))^2 dy
+$$
+The right hand side is the variance of $Y$.
+
+## (c)
+
+We need to derive the Hessian of the log likelihood function $l(\theta)$.
+
+$$
+l(\theta) = -\sum_{i=1}^n \log P(y^{(i)}; \eta^{(i)}) \\
+= (-1) (\sum_{i=1}^n \log b(y^{(i)}) + \eta^{(i)T} T(y^{(i)}) - a(\eta^{(i)}))
+$$
+Assuming $\eta^{(i)} = \theta^T x^{(i)}$ and $\eta^{(i)}$ is a scalar,
+and $T(y^{(i)}) = y$
+
+$$
+l(\theta) = -1(\sum_{i=1}^n \log b(y^{(i)}) + \theta^T x^{(i)} y^{(i)} - a(\theta^T x^{(i)}))
+$$
+Taking derivative w.r.t $\theta_j$,
+$$
+\frac{\partial l(\theta)}{\partial \theta_j} = -\sum_{i=1}^n (y^{(i)} - a'(\theta^T x^{(i)})) x_j^{(i)}
+$$
+
+Taking derivative w.r.t $\theta_k$,
+$$
+\frac{\partial^2 l(\theta)}{\partial \theta_j \partial \theta_k} = -\sum_{i=1}^n (-a''(\theta^T x^{(i)})) x_j^{(i)} x_k^{(i)}
+$$
+
+We know that $a''(\theta^T x^{(i)})$ is the variance of $Y$ so it's always > 0. Hence, the Hessian is always positive definite.
+
+# Problem 5: Linear Regression: linear in what?
+
+## (a): Learning degree-3 polynomials of the input
+
+Given that input is $\mathcal{R} \rightarrow \mathcal{R}$.
+The objective function is the sum of squared errors. We need to find $\theta$ that minimizes the objective function using gradient descent. It's the same as linear regression.
+
+$$
+\begin{split}
+J(\theta) = \frac{1}{2} \sum_{i=1}^n (y^{(i)} - \theta^T x^{(i)})^2 \\
+\end{split}
+$$
+
+## (b): 
+
+![degree3 problem (b)](./ps1/src/featuremaps/b.png){fig-align="center" width="80%"}
+
+## (c):
+
+![multiple degree3 problem (c)](./ps1/src/featuremaps/c.png){fig-align="center" width="80%"}
+
+For $k=20$, the model is overfitting. But the fit gets better as $k$ increases.
+
+## (d):
+
+![degree3 problem (d)](./ps1/src/featuremaps/d.png){fig-align="center" width="80%"}
+
+We're overfitting the data when $k = 20$.
+
+## (e):
+
+![degree3 problem (e)](./ps1/src/featuremaps/e.png){fig-align="center" width="80%"}
