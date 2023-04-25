@@ -125,6 +125,8 @@ This basically means that any line segment between two points on the graph of th
 
 
 ```{python}
+#| echo: false
+
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -148,3 +150,134 @@ plt.plot([-5, 4], [25, 16])
 plt.axvline(x=2.5, color='r')
 plt.show()
 ```
+
+## Convex functions properties
+
+Property 1: If $f$ is convex then $f(\alpha x + (1-\alpha)y) \leq \alpha f(x) + (1-\alpha)f(y)$ for any $\alpha \in [0,1]$ and $x,y \in \mathbb{R}^n$.
+
+**Proof:** Let $x,y \in \mathbb{R}$ and $\alpha \in [0,1]$. Since any point between $x$ and $y$ on the line segment $[x,y]$ is given by $\alpha x + (1-\alpha)y$, we have the following from the definition of convexity:
+
+The value of function as point $z = \alpha x + (1-\alpha)y$ is $f(\alpha x + (1-\alpha)y)$. Now the equation of line is:
+$$
+y = y_1 + \frac{y_2 - y_1}{x_2 - x_1}(x - x_1)
+$$
+Plugging values for $z$ and $x_1, x_2, y_1, y_2$ we get:
+
+$$
+\begin{split}
+y & = f(x) + \frac{f(y) - f(x)}{y - x}(\alpha.x + (1 - \alpha)y - x) \\
+  &= f(x) + \frac{f(y) - f(x)}{y - x}(y - x)(1 - \alpha) \\
+  &= f(x) (1 - 1 + \alpha) + f(y)(1 - \alpha) \\
+  &= f(x) (\alpha) + f(y)(1 - \alpha) \\
+\end{split}
+$$
+
+So according to the definition of convexity we have:
+$$
+f(\alpha x + (1-\alpha)y) \leq \alpha f(x) + (1-\alpha)f(y)
+$$
+
+**Property 2**: Suppose $f: \mathcal{R}^n \rightarrow \mathcal{R}$. Then 
+
+1. $f(y) \geq f(x) + \nabla f(x)^T(y-x)$ for all $x,y \in \mathcal{R}^n$ if and only if $f$ is convex
+
+2. $\nabla^2 \succeq 0$ if and only if $f$ is convex
+
+**Proof**:
+
+```{python}
+#| echo: false
+
+import numpy
+import matplotlib.pyplot as plt
+
+
+# Plot a simple convex function
+# Choose a point x and plot the tangent line at that point (x, f(x)) in red
+# Now plot another point y
+def f(x):
+  return x**2
+
+
+def derivate(x):
+  return 2 * x
+
+
+def tangent_line(x, y, x1):
+  return derivate(x) * (x1 - x) + y
+
+
+x = 2
+x1 = np.linspace(-10, 10, 100)
+y1 = f(x1)
+plt.plot(x1, y1)
+# Plot the point x
+plt.scatter(x, f(x))
+plt.scatter(-5, 25)
+
+# Plot the tangent line at x
+y = f(x)
+x2 = np.linspace(x - 5, x + 5, 100)
+plt.plot(x2, tangent_line(x, y, x2), color='r')
+
+```
+
+1. Using the definition of convexity we have:
+$$
+\begin{split}
+f(\alpha x + (1-\alpha)y) &\leq \alpha f(x) + (1-\alpha)f(y) \\
+f(y) - f(x) \geq \frac{f(x + \alpha(y - x)) - f(x)}{\alpha} \\
+\text{if $\alpha \rightarrow$ 0} \\
+f(y) - f(x) \geq \nabla f(x)^T(y - x) \\
+\end{split}
+$$ 
+
+Now we also need to prove the other direction. So suppose $f(y) \geq f(x) + \nabla f(x)^T(y-x)$ for all $x,y \in \mathcal{R}^n$. We need to prove that $f(\alpha x + (1-\alpha)y) \leq \alpha f(x) + (1-\alpha)f(y)$.
+Let's consider $z = \alpha x + (1-\alpha)y$. Then we have:
+
+$$
+\begin{split}
+f(x) &\geq f(z) + \nabla f(z)^T(x - z) \\
+f(y) &\geq f(z) + \nabla f(z)^T(y - z) \\
+\text{Multiply first with $\alpha$ and other by $1 - \alpha$ and add} \\
+\alpha f(x) + (1 - \alpha)f(y) &\geq \alpha f(z) + (1 - \alpha)f(z) + \\ \alpha \nabla f(z)^T(x - z) + (1 - \alpha)\nabla f(z)^T(y - z) \\
+  &\geq f(z) + \nabla f(z)^T(\alpha x + (1 - \alpha)y - z) \\
+\text{Since $\alpha x + (1 - \alpha)y = z$ } \\
+  &\geq f(z) + \nabla f(z)^T(0) \\
+  &\geq f(z) \\
+\end{split}
+$$
+
+2. Let's prove the second part. Suppose $\nabla^2 \succeq 0$ then we have:
+
+Let us first prove it for $f: \mathbb{R} \rightarrow \mathbb{R}$.
+Let $x, y \in dom(f)$ and $x \leq y$ then we have:
+$$
+\begin{split}
+f(y) - f(x) &\geq f'(x)(y - x) \\
+f(x) - f(y) &\geq f'(y)(x - y) \\
+\implies \frac{f'(x) - f'(y)}{x - y} &\geq 0 \\
+\text{if $x \rightarrow y$ then} \\
+\frac{f'(x) - f'(y)}{x - y} \rightarrowtail f''(x) \geq 0 \\
+\end{split}
+$$
+
+We can prove the other direction using the mean value version of the Taylor's theorem. Suppose $f''(x) \geq 0$ then there exists a point $z \in (x, y)$ such that:
+
+$$
+\begin{split}
+f(y) = f(x) + f'(x)(y - x) + f''(z)\frac{(y - x)^2}{2} \\
+\text{Since $f''(z) \geq 0$} \\
+f(y) \geq f(x) + f'(x)(y - x) \\
+\end{split}
+$$
+
+Now we need to prove the same for $f: \mathbb{R}^n \rightarrow \mathbb{R}$.
+Remember that a convex function is convex along all lines.
+i.e. if $f: \mathbb{R}^n \rightarrow \mathbb{R}$ is convex then $g(\alpha) = f(x + \alpha(v))$ is convex for all $x \in \mathbb{R}^n$ and $v \in \mathbb{R}^n$.
+
+$$
+\begin{split}
+g''(\alpha) = v^T\nabla^2 f(x + \alpha v) v \\
+\end{split}
+$$

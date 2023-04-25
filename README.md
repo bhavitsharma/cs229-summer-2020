@@ -8,3 +8,7 @@
   or I was lazy. If you want to see the proofs, please let me know and I will try to add them.
 * I am using Quarto to write these solutions. If you want to see the source code, please check the .qmd files in the respective folders.
 * I have also taken some notes on the course. You can find them [here](my-notes.qmd)
+
+## Patches to the quarto extension
+
+- [x] unset QUARTO_PYTHON env because that's coming from the flake.nix

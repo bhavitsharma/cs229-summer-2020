@@ -10,5 +10,6 @@
   "editor.formatOnPaste": true,
   "editor.tabSize": 2,
   "editor.insertSpaces": true,
-  "editor.indentSize": 2
+  "editor.indentSize": 2,
+  "files.autoSave": "off"
 }
