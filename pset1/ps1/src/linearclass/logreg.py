@@ -1,22 +1,5 @@
 import numpy as np
-import pandas as pd
 import util
-
-
-def load_data(path):
-  """Load data from CSV file.
-
-    Args:
-        path: Path to CSV file.
-
-    Returns:
-        x: Inputs of shape (n_examples, dim).
-        y: Labels of shape (n_examples,).
-    """
-  df = pd.read_csv(path)
-  y = df["y"].to_numpy()
-  x = df.drop(columns=["y"]).to_numpy()
-  return x, y
 
 
 def main(train_path, valid_path, plot_path, save_path):

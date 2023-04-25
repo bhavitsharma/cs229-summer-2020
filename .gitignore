@@ -1,2 +1,7 @@
 pset1/solution_files
 __pycache__/
+.jupyter/
+.ipynb_checkpoints/
+*.pyc
+*.log
+my-notes.ipynb

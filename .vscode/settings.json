@@ -10,6 +10,5 @@
   "editor.formatOnPaste": true,
   "editor.tabSize": 2,
   "editor.insertSpaces": true,
-  "editor.indentSize": 2,
-  "nixEnvSelector.nixFile": "${workspaceRoot}/shell.nix"
+  "editor.indentSize": 2
 }
