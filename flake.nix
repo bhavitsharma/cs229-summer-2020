@@ -37,13 +37,10 @@
           python = pythonVersion;
           requirements = builtins.readFile ./requirements.txt;
         };
-        jupyterlab = mkJupyterlabNew ({ ... }: {
-          imports = [ (import ./kernel.nix) ];
-        });
       in
       {
         devShells.default = pkgs.mkShellNoCC {
-          packages = [ pythonEnv pkgs.yapf quarto_new pkgs.python310Packages.ipykernel jupyterlab ];
+          packages = [ pythonEnv pkgs.yapf quarto_new pkgs.python310Packages.ipykernel ];
 
           shellHook = ''
             export PYTHONPATH="${pythonEnv}/bin/python"
