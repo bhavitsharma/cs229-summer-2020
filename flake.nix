@@ -22,30 +22,24 @@
         pkgs = import nixpkgs {
           system = system;
         };
-        inherit (jupyterWith.lib.${system}) mkJupyterlabNew;
-        mach = mach-nix.lib.${system};
-        # call the pkgs.quarto package derivation with extraPythonPackages attribute
-        quarto_new = pkgs.quarto.override {
-          extraPythonPackages = ps: with ps; [
-            numpy
-            matplotlib
-            pandas
-          ];
-        };
-
-        pythonEnv = mach.mkPython {
-          python = pythonVersion;
-          requirements = builtins.readFile ./requirements.txt;
-        };
+        my-python-packages = ps: with ps; [
+          pandas
+          requests
+          numpy
+          matplotlib
+          jupyter
+          ipykernel
+        ];
+        my-python = pkgs.python311.withPackages my-python-packages;
       in
       {
         devShells.default = pkgs.mkShellNoCC {
-          packages = [ pythonEnv pkgs.yapf quarto_new pkgs.python310Packages.ipykernel ];
-
+          packages = [ pkgs.yapf pkgs.quarto my-python ];
           shellHook = ''
-            export PYTHONPATH="${pythonEnv}/bin/python"
+            export PYTHONPATH="${my-python}/bin/python"
+            export QUARTO_PYTHON="${my-python}/bin/python"
+            export PATH="${my-python}/bin:$PATH"
             export YAPF_PATH="${pkgs.yapf}/bin/yapf"
-            export QUARTO_PATH="${quarto_new}/bin/quarto"
           '';
         };
       }
