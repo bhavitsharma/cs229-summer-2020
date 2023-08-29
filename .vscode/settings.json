@@ -5,11 +5,10 @@
     "--style",
     "{based_on_style: google, indent_width: 2}"
   ],
-  "nixEnvSelector.suggestion": false,
   "editor.formatOnSave": true,
   "editor.formatOnPaste": true,
   "editor.tabSize": 2,
   "editor.insertSpaces": true,
   "editor.indentSize": 2,
-  "files.autoSave": "off"
+  "files.autoSave": "afterDelay"
 }
